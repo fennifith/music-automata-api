@@ -37,9 +37,9 @@ ReplaySubject.add({
 
 let arpeggio = Music.block()
     .on('note', (note) => {
-        arpeggio.push(note);
-        arpeggio.push(Object.assign(note, { midi: note.midi + 4 }));
-        arpeggio.push(Object.assign(note, { midi: note.midi + 7 }));
+        piano.note(note);
+        piano.note(Object.assign(note, { midi: note.midi + 4 }));
+        piano.note(Object.assign(note, { midi: note.midi + 7 }));
     })
     .on('play', (note) => {
 
