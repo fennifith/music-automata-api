@@ -1,5 +1,6 @@
 const Music = require('./api/index.js');
 const audio = require('some-audio-plugin');
+const Rx = require('rxjs');
 
 /*
 let note = {
@@ -20,39 +21,13 @@ arpeggio.push(Object.assign(note, { midi: note.midi + 4 }));
 ---
 */
 
+
 let piano = Music.block()
     .on('play', (note) => {
         audio.play(note.midi, "piano");
     });
 
-class Music {
-  _notes = ReplaySubject();
 
-  /**
-   * @prop {{midi: number, offset: number}} val
-   */
-  set note(val) {
-    // FIXME: API is wrong
-    this._notes.add(val)
-  }
-
-  /**
-   * @prop {Subject} to
-   * @see {@link http://reactivex.io/documentation/subject.html|Rx Subject Docs}
-   */
-  to(subj) {
-    // FIXME: I don't handle any of the notes modifications
-    this._notes = this._notes.pipe(map(subj))
-  }
-
-  play() {
-    this._notes.subscribe(() => {})
-  }
-
-  remove() {
-    this._notes.unsubscribe(() => {})
-  }
-}
 
 
 ReplaySubject.add({
