@@ -1,5 +1,4 @@
-const expect = require('chai').expect;
-const Block = require('./api/block.js');
+const Block = require('./block.js');
 
 //         1
 //       2   3
