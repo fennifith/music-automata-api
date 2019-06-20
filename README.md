@@ -1,5 +1,3 @@
-# Music Automata API
-
 The goal of this project is to create an API that can be used to schedule and
 organize automated music generation using [ReactiveX](http://reactivex.io/)
 and the observable pattern.
@@ -17,14 +15,12 @@ to modify the note, remove it, or create new notes before passing them along.
 Together, the blocks build a sort of tree structure along which notes are
 passed. For example, consider a set of blocks that are organized like below:
 
-```nohighlight
-
+```
        [keyboard]
         /      \
     [piano]  [arpeggiator]
                  \
                 [synth]
-
 ```
 
 Here, all notes are created from keyboard input. They are then passed directly
