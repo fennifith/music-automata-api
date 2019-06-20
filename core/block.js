@@ -16,9 +16,7 @@ module.exports = class Block {
 
         // Immediately forward derivative notes to consecutive blocks
         this._notes.subscribe((note) => {
-            this._listeners.note.forEach(noteListener => {
-                this.forward(noteListener(note));
-            });
+            this._listeners.note.forEach(noteListener => noteListener(note));
         });
 
         // Send notes to own 'play' event
@@ -26,7 +24,7 @@ module.exports = class Block {
             mergeMap(noteObj => {
                 let offset = noteObj.timestamp - Date.now(); // TODO: replace with own timing
                 // If offset is 0, run right away
-                offset = noteObj.offset <= 0 ? 0 : noteObj.offset;
+                offset = offset <= 0 ? 0 : offset;
                 return of(noteObj).pipe(delay(offset));
             })
         ).subscribe((note) => {
@@ -38,10 +36,7 @@ module.exports = class Block {
      * @prop {noteType} val
      */
     note(val) {
-        /*const noteValue = this._listeners.note.reduce((prev, listenerCB) => {
-            return listenerCB(prev);
-        }, val);*/
-        this._notes.next(val);
+        if (val) this._notes.next(val);
     }
 
     /**
