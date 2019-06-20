@@ -6,7 +6,8 @@ const Block = require('./block.js');
 
 const piano = new Block()
     .on('note', (note) => {
-      note.test = "HELLO THERE, HUMAN";
+        console.log(note);
+        note.test = "HELLO THERE, HUMAN";
     })
     .on('play', (note) => {
         console.log(note);
@@ -14,7 +15,7 @@ const piano = new Block()
 
 const keyboard = new Block().to(piano);
 
-keyboard.note({midi: 1, offset: 12});
-keyboard.note({midi: 1, offset: 123});
-keyboard.note({midi: 5, offset: 3452});
-keyboard.note({midi: 89, offset: 12});
+keyboard.note({midi: 1, timestamp: Date.now() + 12});
+keyboard.note({midi: 1, timestamp: Date.now() + 123});
+keyboard.note({midi: 5, timestamp: Date.now() + 3452});
+keyboard.note({midi: 89, timestamp: Date.now() + 12});

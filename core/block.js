@@ -2,7 +2,7 @@ const {Subject, merge, of} = require('rxjs');
 const {mergeMap, delay} = require('rxjs/operators');
 
 /**
- * @typedef {{midi: number, offset: number}} noteType
+ * @typedef {{midi: number, timestamp: number}} noteType
  * @prop {} val
  */
 module.exports = class Block {
@@ -15,9 +15,27 @@ module.exports = class Block {
             play: []
         };
 
+        this._notes.subscribe((note) => {
+            console.log('hi');
+            console.log(this._listeners.note);
+            this._listeners.note.forEach((noteListener) => noteListener(note));
+        });
+
+        this._notes.pipe(
+            mergeMap(noteObj => {
+                let offset = noteObj.timestamp - Date.now(); // TODO: replace with own timing
+                // If offset is 0, run right away
+                offset = noteObj.offset <= 0 ? 0 : noteObj.offset;
+                return of(noteObj).pipe(delay(offset));
+            })
+        ).subscribe((note) => {
+            console.log("hi");
+            this._listeners.play.forEach(playListener => playListener(note));
+        });
+
         // repeatUntil, pause/stop, BehaviorSubject
         // This will merge the RxJS subjects from notes and playFrom `_notes` subjects
-        merge(this._notes, ...this._playFrom.map(block => block._notes))
+        /*merge(this._notes, ...this._playFrom.map(block => block._notes))
             .pipe(
                 mergeMap(noteObj => {
                     // If offset is 0, run right away
@@ -27,23 +45,17 @@ module.exports = class Block {
             )
             .subscribe((note) => {
                 this._listeners.play.forEach(playListener => playListener(note));
-            });
+            });*/
     }
 
     /**
      * @prop {noteType} val
      */
     note(val) {
-        const noteValue = this._listeners.note.reduce((prev, listenerCB) => {
+        /*const noteValue = this._listeners.note.reduce((prev, listenerCB) => {
             return listenerCB(prev);
-        }, val);
-        this._notes.next(noteValue);
-
-
-        // If there are `to` fields, just send to those, don't play themselves
-        this._sendTo.forEach(blockToSend => {
-            blockToSend.play();
-        });
+        }, val);*/
+        this._notes.next(val);
     }
 
     /**
@@ -60,6 +72,7 @@ module.exports = class Block {
             throw "This is not a valid listener type";
         }
         this._listeners[string].push(cb);
+        console.log(this._listeners[string]);
         return this;
     }
 
