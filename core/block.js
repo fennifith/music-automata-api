@@ -16,7 +16,12 @@ module.exports = class Block {
 
         // Immediately forward derivative notes to consecutive blocks
         this._notes.subscribe((note) => {
-            this._listeners.note.forEach(noteListener => noteListener(note));
+            let noteDeriv = note;
+            this._listeners.note.forEach(noteListener => {
+                noteDeriv = noteListener(noteDeriv);
+            });
+
+            this.forward(noteDeriv);
         });
 
         // Send notes to own 'play' event
@@ -36,7 +41,10 @@ module.exports = class Block {
      * @prop {noteType} val
      */
     note(val) {
-        if (val) this._notes.next(val);
+        let array = Array.from(val);
+        if (array.length)
+            array.forEach(v => this._notes.next(v));
+        else if (val) this._notes.next(val);
     }
 
     /**
