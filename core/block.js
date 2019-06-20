@@ -8,19 +8,20 @@ const {mergeMap, delay} = require('rxjs/operators');
 module.exports = class Block {
     constructor() {
         this._notes = new Subject();
-        this._playFrom = [];
         this._sendTo = [];
         this._listeners = {
             note: [],
             play: []
         };
 
+        // Immediately forward derivative notes to consecutive blocks
         this._notes.subscribe((note) => {
-            console.log('hi');
-            console.log(this._listeners.note);
-            this._listeners.note.forEach((noteListener) => noteListener(note));
+            this._listeners.note.forEach(noteListener => {
+                this.forward(noteListener(note));
+            });
         });
 
+        // Send notes to own 'play' event
         this._notes.pipe(
             mergeMap(noteObj => {
                 let offset = noteObj.timestamp - Date.now(); // TODO: replace with own timing
@@ -29,23 +30,8 @@ module.exports = class Block {
                 return of(noteObj).pipe(delay(offset));
             })
         ).subscribe((note) => {
-            console.log("hi");
             this._listeners.play.forEach(playListener => playListener(note));
         });
-
-        // repeatUntil, pause/stop, BehaviorSubject
-        // This will merge the RxJS subjects from notes and playFrom `_notes` subjects
-        /*merge(this._notes, ...this._playFrom.map(block => block._notes))
-            .pipe(
-                mergeMap(noteObj => {
-                    // If offset is 0, run right away
-                    const offset = noteObj.offset <= 0 ? 0 : noteObj.offset;
-                    return of(noteObj).pipe(delay(offset));
-                })
-            )
-            .subscribe((note) => {
-                this._listeners.play.forEach(playListener => playListener(note));
-            });*/
     }
 
     /**
@@ -71,8 +57,8 @@ module.exports = class Block {
         if (!Object.keys(this._listeners).includes(string)) {
             throw "This is not a valid listener type";
         }
+
         this._listeners[string].push(cb);
-        console.log(this._listeners[string]);
         return this;
     }
 
@@ -83,8 +69,16 @@ module.exports = class Block {
      * @see {@link http://reactivex.io/documentation/subject.html|Rx Subject Docs}
      */
     to(block) {
-        block._playFrom.push(this);
         this._sendTo.push(block);
         return this;
+    }
+
+    /**
+     * Forwards a note to all consecutive blocks.
+     *
+     * @prop {noteType} note
+     */
+    forward(note) {
+        this._sendTo.forEach((block) => block.note(note));
     }
 }

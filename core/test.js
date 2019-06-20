@@ -13,7 +13,9 @@ const piano = new Block()
         console.log(note);
     });
 
-const keyboard = new Block().to(piano);
+const keyboard = new Block()
+    .on('note', note => note)
+    .to(piano);
 
 keyboard.note({midi: 1, timestamp: Date.now() + 12});
 keyboard.note({midi: 1, timestamp: Date.now() + 123});
