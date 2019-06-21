@@ -41,10 +41,12 @@ module.exports = class Block {
      * @prop {noteType} val
      */
     note(val) {
+        if (!val) return;
+
         let array = Array.from(val);
         if (array.length)
             array.forEach(v => this._notes.next(v));
-        else if (val) this._notes.next(val);
+        else this._notes.next(val);
     }
 
     /**
