@@ -9,8 +9,5 @@
   "author": "James Fenn <18jafenn90@gmail.com> (https://jfenn.me/)",
   "license": "MIT",
   "dependencies": {
-    "audio-loader": "^1.0.3",
-    "audio-play": "^2.2.1",
-    "sound-play": "^1.0.5"
   }
 }

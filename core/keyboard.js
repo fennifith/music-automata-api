@@ -43,9 +43,8 @@ module.exports = function() {
 			// TODO: support duration on keypress/release
 			if (_mapping[note.key]) {
 				return Object.assign({
-					midi: _mapping[note.key],
-					timestamp: Date.now()
+					midi: _mapping[note.key]
 				}, note);
-			}
+			} else return note;
 		});
 };
