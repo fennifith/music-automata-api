@@ -1,0 +1,16 @@
+{
+  "name": "music-automata-soundboard-util",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "James Fenn <18jafenn90@gmail.com> (https://jfenn.me/)",
+  "license": "MIT",
+  "dependencies": {
+    "audio-loader": "^1.0.3",
+    "audio-play": "^2.2.1",
+    "sound-play": "^1.0.5"
+  }
+}
