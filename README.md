@@ -40,8 +40,8 @@ let synth = new Block()
 let arpeggiator = new Block()
     .on('note', (note) => {
         arpeggiator.forward(note);
-        arpeggiator.forward(Object.assign(note, { midi: note.midi + 4 }));
-        arpeggiator.forward(Object.assign(note, { midi: note.midi + 7 }));
+        arpeggiator.forward(note.mutate({ midi: note.midi + 4 }));
+        arpeggiator.forward(note.mutate({ midi: note.midi + 7 }));
     })
     .to(synth);
 

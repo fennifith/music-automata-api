@@ -1,7 +1,5 @@
 const Block = require('../core/block.js');
 const _soundboard = require('../soundboard-util/soundboard.js');
-const _keyboard = require('../core/keyboard.js');
-const _readline = require('readline');
 
 const instrument = _soundboard();
 
