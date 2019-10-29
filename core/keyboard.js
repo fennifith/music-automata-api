@@ -41,10 +41,10 @@ module.exports = function() {
     return new Block()
     	.on('note', function(note) {
 			// TODO: support duration on keypress/release
-			if (_mapping[note.key]) {
-				return Object.assign({
-					midi: _mapping[note.key]
-				}, note);
+			if (_mapping[note.data.key]) {
+				return note.mutate({
+					midi: _mapping[note.data.key]
+				});
 			} else return note;
 		});
 };

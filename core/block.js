@@ -1,9 +1,11 @@
 const {Subject, merge, of} = require('rxjs');
 const {mergeMap, delay} = require('rxjs/operators');
+const {Note, note} = require('./note.js');
+const _timer = require('./timer.js');
 
 /**
- * @typedef {{midi: number, timestamp: number}} noteType
- * @prop {} val
+ * Block class; represents any arbitrary source/receiver
+ * of notes.
  */
 module.exports = class Block {
     constructor() {
@@ -27,7 +29,7 @@ module.exports = class Block {
         // Send notes to own 'play' event
         this._notes.pipe(
             mergeMap(noteObj => {
-                let offset = noteObj.timestamp - Date.now(); // TODO: replace with own timing
+				let offset = noteObj.timestamp - _timer.now();
                 // If offset is 0, run right away
                 offset = offset <= 0 ? 0 : offset;
                 return of(noteObj).pipe(delay(offset));
@@ -38,10 +40,11 @@ module.exports = class Block {
     }
 
     /**
-     * @prop {noteType} val
+     * @prop {Note|Object} val
      */
     note(val) {
-        if (!val) return;
+		if (!val) return;
+		val = note(val);
 
         let array = Array.from(val);
         if (array.length)
@@ -73,17 +76,17 @@ module.exports = class Block {
      * @prop {Block} to
      * @see {@link http://reactivex.io/documentation/subject.html|Rx Subject Docs}
      */
-    to(block) {
-        this._sendTo.push(block);
+    to(...blocks) {
+		blocks.forEach((block) => this._sendTo.push(block));
         return this;
     }
 
     /**
      * Forwards a note to all consecutive blocks.
      *
-     * @prop {noteType} note
+     * @prop {Note|Object} note
      */
-    forward(note) {
-        this._sendTo.forEach((block) => block.note(note));
+    forward(val) {
+        this._sendTo.forEach((block) => block.note(note(val)));
     }
 }

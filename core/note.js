@@ -1,3 +1,5 @@
+const _timer = require('./timer.js');
+
 /**
  * Note, contains data + timestamp info.
  */
@@ -5,7 +7,7 @@ class Note {
 
 	constructor(data) {
 		this.data = data;
-		this.timestamp = 0;
+		this.timestamp = _timer.now();
 		this.duration = 0;
 	}
 
@@ -15,12 +17,12 @@ class Note {
 
 	mutate(obj) {
 		let copy = this.clone();
-		copy.data = Object.assign({}, data);
+		copy.data = Object.assign({}, this.data);
 		Object.assign(copy.data, obj);
 		return copy;
 	}
 
-	shiftTime(time) {
+	shift(time) {
 		this.timestamp += time;
 		return this;
 	}
@@ -56,9 +58,15 @@ class NoteSequence extends Note {
 	}
 
 	flatten() {
-		return notes.map(note => note.clone().shiftTime(this.timestamp));
+		return notes.map(note => note.clone().shift(this.timestamp));
 	}
 
 }
 
-module.exports = { Note, NoteSequence };
+function note(obj) {
+	if (obj instanceof Note)
+		return obj;
+	else return new Note(obj);
+}
+
+module.exports = { Note, NoteSequence, note };

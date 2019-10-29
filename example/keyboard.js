@@ -7,15 +7,17 @@ const instrument = _soundboard();
 
 const log = new Block()
     .on('note', function(note) {
-		note.test = "HELLO THERE, HUMAN";
-        return note;
+		return note.mutate({
+			test: "HELLO THERE, HUMAN"
+		});
     })
     .on('play', (note) => {
         console.log(note);
-    })
-    .to(instrument);
+    });
 
-const input = _keyboard().to(log);
+const input = _keyboard()
+	.to(log)
+	.to(instrument);
 	
 // read keypress from stdin
 _readline.emitKeypressEvents(process.stdin);
@@ -26,7 +28,7 @@ _stdin.on('keypress', function(chunk, key) {
     if (key && key.ctrl && key.name == 'c') {
         process.exit();
     } else {
-        input.note({ sound: "soundboard/tink.mp3", timestamp: Date.now() })
+        input.note({ sound: "soundboard/tink.mp3" })
     }
 });
 

@@ -4,10 +4,10 @@ const { exec } = require('child_process');
 module.exports = function() {
 	let block = new Block()
 		.on('play', (note) => {
-			if (!note || !note.sound)
+			if (!note.data || !note.data.sound)
 				throw "Not a soundboard note...";
 			
-			exec("play " + note.sound);
+			exec("play " + note.data.sound);
 		});
 	
 	return block;
