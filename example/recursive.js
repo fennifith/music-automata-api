@@ -1,8 +1,8 @@
 const Block = require('../core/block.js');
-const _soundboard = require('../soundboard-util/soundboard.js');
+const _exec = require('../native-util/exec.js');
 const { note } = require('../core/note.js');
 
-const instrument = _soundboard();
+const instrument = _exec();
 
 const log = new Block()
     .on('play', (note) => {
@@ -18,7 +18,7 @@ const beat = new Block()
 
 const rand = new Block()
 	.on('play', (note) => {
-		rand.note(note.mutate().shift(200 + Math.round(Math.random() * 10) * 50))
+		rand.note(note.mutate().shift(Math.round(Math.random() * 5) * 250))
 	})
 	.to(log);
 

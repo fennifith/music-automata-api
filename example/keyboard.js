@@ -1,9 +1,9 @@
 const Block = require('../core/block.js');
-const _soundboard = require('../soundboard-util/soundboard.js');
+const _synth = require('../native-util/synth.js');
 const _keyboard = require('../core/keyboard.js');
 const _readline = require('readline');
 
-const instrument = _soundboard();
+const instrument = _synth();
 
 const log = new Block()
     .on('note', function(note) {
@@ -28,7 +28,7 @@ _stdin.on('keypress', function(chunk, key) {
     if (key && key.ctrl && key.name == 'c') {
         process.exit();
     } else {
-        input.note({ sound: "soundboard/tink.mp3" })
+        input.note({ key: key.name });
     }
 });
 

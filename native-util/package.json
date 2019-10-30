@@ -9,5 +9,6 @@
   "author": "James Fenn <18jafenn90@gmail.com> (https://jfenn.me/)",
   "license": "MIT",
   "dependencies": {
+    "nodesynth": "^0.6.0"
   }
 }
