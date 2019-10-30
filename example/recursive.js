@@ -22,7 +22,7 @@ const rand = new Block()
 	})
 	.to(log);
 
-let sound = note({ sound: 'soundboard/boof.mp3' });
-beat.note(sound);
+let sound = note(); // get initial timestamp
+beat.note(sound.mutate({ sound: 'soundboard/boof.mp3' }));
 beat.note(sound.mutate({ sound: 'soundboard/smack.mp3' }).shift(500));
 rand.note(sound.mutate({ sound: 'soundboard/tink.mp3' }).shift(750));
