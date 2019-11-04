@@ -13,7 +13,8 @@ module.exports = class Block {
 		this._sendTo = [];
 		this._listeners = {
 			note: [],
-			play: []
+			play: [],
+			stop: [] // TODO: stop event
 		};
 
 		// Immediately forward derivative notes to consecutive blocks
@@ -37,7 +38,10 @@ module.exports = class Block {
 			})
 		).subscribe((note) => {
 			this._listeners.play.forEach(playListener => playListener(note));
+			this.map[note.id] = true; // TODO: timeout note value
 		});
+
+		this.map = {};
 	}
 
 	/**
@@ -50,7 +54,7 @@ module.exports = class Block {
 		let array = Array.from(val);
 		if (array.length)
 			array.forEach(v => this._notes.next(v));
-		else this._notes.next(val);
+		else this._notes.next(val); // TODO: check duplicate notes/updates in `this.map`
 		
 		return this;
 	}
