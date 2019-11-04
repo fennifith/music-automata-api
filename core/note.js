@@ -11,6 +11,23 @@ class Note {
 		this.duration = 0;
 	}
 
+	get id() {
+		if (this.data.id)
+			return this.data.id;
+		else if (typeof this.data === "object")
+			return JSON.stringify(this.data);
+		else return "" + this.data;
+	}
+
+	get isPlaying() {
+		return this.timestamp > _timer.now() &&
+			(!this.isFinite || this.timestampEnd < _timer.now());
+	}
+
+	get isFinite() {
+		return this.duration > 0;
+	}
+
 	clone() {
 		return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
 	}

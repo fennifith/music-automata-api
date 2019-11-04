@@ -23,7 +23,8 @@ module.exports = class Block {
 				noteDeriv = noteListener(noteDeriv);
 			});
 
-			this.forward(noteDeriv);
+			if (noteDeriv)
+				this.forward(noteDeriv);
 		});
 
 		// Send notes to own 'play' event

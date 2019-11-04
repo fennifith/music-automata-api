@@ -6,21 +6,23 @@ const _readline = require('readline');
 const { note } = require('../core/note.js');
 
 let synth = _synth();
-let exec = _exec();
-
+	
 const log = new Block()
-	.on('note', function(note) {
-		return note.mutate({
-			test: "HELLO THERE, HUMAN"
-		});
-	})
 	.on('play', (note) => {
 		console.log(note);
 	});
 
-const input = _keyboard()
+let arpeggiator = new Block()
+    .on('note', (note) => {
+        arpeggiator.forward(note);
+        arpeggiator.forward(note.mutate({ id: note.data.midi + 4, midi: note.data.midi + 4 }).shift(250));
+        arpeggiator.forward(note.mutate({ id: note.data.midi + 7, midi: note.data.midi + 7 }).shift(500));
+    })
 	.to(log)
 	.to(synth);
+
+const input = _keyboard()
+	.to(arpeggiator);
 	
 // read keypress from stdin
 _readline.emitKeypressEvents(process.stdin);

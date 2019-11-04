@@ -48,6 +48,7 @@ module.exports = function() {
 			// TODO: support duration on keypress/release
 			if (_mapping[note.data.key]) {
 				return note.mutate({
+					id: _mapping[note.data.key],
 					midi: _mapping[note.data.key]
 				});
 			} else return note;
