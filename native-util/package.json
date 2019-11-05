@@ -9,6 +9,7 @@
   "author": "James Fenn <18jafenn90@gmail.com> (https://jfenn.me/)",
   "license": "MIT",
   "dependencies": {
+    "iohook": "^0.6.1",
     "nodesynth": "^0.6.0"
   }
 }

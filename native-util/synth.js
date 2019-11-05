@@ -21,16 +21,20 @@ module.exports = function({ opts = {bitDepth:16,sampleRate:44100} } = {}) {
 	}
 
 	let block = new Block()
-		.on('play', (note) => {
+		.on('note', (note) => {
 			if (!note.data || !note.data.midi) {
 				return;
 			}
 
-			if (!osc[note.id])
+			note.on('start', () => {
 				osc[note.id] = new NodeSynth.Oscillator('sin', () => Math.pow(2, (note.data.midi - 69) / 12) * 440).multiply(0.5);
-			else delete osc[note.id];
+				sourceSynth();
+			});
 
-			sourceSynth();
+			note.on('end', () => {
+				delete osc[note.id];
+				sourceSynth();
+			});
 		});
 	
 	return block;

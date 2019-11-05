@@ -7,8 +7,13 @@ class Note {
 
 	constructor(data) {
 		this.data = data;
-		this.timestamp = _timer.now();
-		this.duration = 0;
+
+		this._timestamp = _timer.now();
+		this._duration = 0;
+		this._listeners = {
+			start: [],
+			end: []
+		};
 	}
 
 	get id() {
@@ -20,8 +25,8 @@ class Note {
 	}
 
 	get isPlaying() {
-		return this.timestamp > _timer.now() &&
-			(!this.isFinite || this.timestampEnd < _timer.now());
+		return this.timestamp < _timer.now() &&
+			(!this.isFinite || this.timestampEnd > _timer.now());
 	}
 
 	get isFinite() {
@@ -35,21 +40,74 @@ class Note {
 	mutate(obj) {
 		let copy = this.clone();
 		copy.data = Object.assign({}, this.data);
+		copy._listeners = { start: [], end: [] };
 		Object.assign(copy.data, obj);
 		return copy;
 	}
 
-	shift(time) {
-		this.timestamp += time;
-		return this;
+	get timestamp() {
+		return this._timestamp;
 	}
 
 	get timestampEnd() {
-		return this.timestamp + this.duration;
+		return this._timestamp + this._duration;
+	}
+
+	get duration() {
+		return this._duration;
+	}
+
+	start(time) {
+		time = time ? time : _timer.now();
+		this._timestamp = time;
+
+		_timer.at(this.timestamp).then(() => {
+			this._listeners.start.forEach(f => f(this));
+		});
+
+		return this;
+	}
+
+	for(duration) {
+		duration = duration ? duration : _timer.now() - this.timestamp;
+		this._duration = duration;
+
+		_timer.at(this.timestampEnd).then(() => {
+			this._listeners.end.forEach(f => f(this));
+		});
+
+		return this;
+	}
+
+	end(time) {
+		time = time ? time : _timer.now();
+		this._duration = time - this.timestamp;
+
+		_timer.at(this.timestampEnd).then(() => {
+			this._listeners.end.forEach(f => f(this));
+		});
+
+		return this;
+	}
+
+	shift(time) {
+		let copy = this.mutate();
+		copy._timestamp += time;
+		return copy;
 	}
 
 	flatten() {
 		return [ this ];
+	}
+
+	on(event, cb) {
+		this._listeners[event].push(cb);
+		
+		if (event == 'start' && this.isPlaying)
+			cb();
+		
+		if (event == 'end' && this.timestamp < _timer.now() && !this.isPlaying && this.isFinite)
+			cb();
 	}
 
 }
@@ -75,7 +133,7 @@ class NoteSequence extends Note {
 	}
 
 	flatten() {
-		return notes.map(note => note.clone().shift(this.timestamp));
+		return notes.map(note => note.shift(this.timestamp));
 	}
 
 }

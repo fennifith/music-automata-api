@@ -13,8 +13,7 @@ module.exports = class Block {
 		this._sendTo = [];
 		this._listeners = {
 			note: [],
-			play: [],
-			stop: [] // TODO: stop event
+			play: []
 		};
 
 		// Immediately forward derivative notes to consecutive blocks
@@ -38,7 +37,13 @@ module.exports = class Block {
 			})
 		).subscribe((note) => {
 			this._listeners.play.forEach(playListener => playListener(note));
-			this.map[note.id] = true; // TODO: timeout note value
+			
+			// set & clear map on start/end events
+			this.map[note.id] = note;
+			note.on('end', () => {
+				if (this.map[note.id] === note) // (should be true unless another note overwrites it)
+					delete this.map[note.id];
+			})
 		});
 
 		this.map = {};
