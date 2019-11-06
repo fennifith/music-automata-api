@@ -69,7 +69,6 @@ class Note {
 	}
 
 	for(duration) {
-		duration = duration ? duration : _timer.now() - this.timestamp;
 		this._duration = duration;
 
 		_timer.at(this.timestampEnd).then(() => {
@@ -103,11 +102,11 @@ class Note {
 	on(event, cb) {
 		this._listeners[event].push(cb);
 		
-		if (event == 'start' && this.isPlaying)
-			cb();
+		//if (event == 'start' && this.timestamp < _timer.now())
+		//	cb();
 		
-		if (event == 'end' && this.timestamp < _timer.now() && !this.isPlaying && this.isFinite)
-			cb();
+		//if (event == 'end' && this.timestampEnd < _timer.now())
+		//	cb();
 	}
 
 }

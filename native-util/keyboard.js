@@ -9,13 +9,16 @@ module.exports = function() {
 
 	_io.on('keydown', (e) => {
 		let key = String.fromCharCode(e.rawcode);
-		map[key] = note({ id: key, key }).start();
-		keyboard.note(map[key]);
+		if (!map[key]) {
+			map[key] = note({ id: key, key }).start();
+			keyboard.note(map[key]);
+		}
 	});
 
 	_io.on('keyup', (e) => {
 		let key = String.fromCharCode(e.rawcode);
 		map[key].end();
+		delete map[key];
 	});
 
 	return keyboard;
