@@ -20,11 +20,8 @@ they have achieved, and [many](https://twitter.com/65dos/status/1115956359470690
 show this in practical use.
 
 Some of the actual music generation strategies are based on
-[this article](https://web.archive.org/web/20160312060120/http://www.ibm.com/developerworks/library/j-camusic/index.html)
+[this article](https://www.ibm.com/developerworks/library/j-camusic/index.html)
 by Paul D. Reiners about the relationship between cellular automata and music.
-Huge thanks to the [Wayback Machine](https://archive.org/) for keeping copies of
-these things so that they aren't completely lost to the void when
-[IBM redesigns their developer site and removes a bunch of useful information](https://twitter.com/fennifith/status/1118354510643191808).
 
 ## Design
 
