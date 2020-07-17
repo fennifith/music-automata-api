@@ -21,7 +21,7 @@
     "mocha": "^6.1.2"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "rxjs": "^6.5.2"
   }
 }
